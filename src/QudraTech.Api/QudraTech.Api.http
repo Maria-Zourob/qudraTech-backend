@@ -1,0 +1,6 @@
+@QudraTech.Api_HostAddress = http://localhost:5274
+
+GET {{QudraTech.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
