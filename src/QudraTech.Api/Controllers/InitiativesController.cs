@@ -106,4 +106,52 @@ public class InitiativesController : ControllerBase
         });
         return Ok(result);
     }
+    public record CreateKpiDto(
+        string NameAr, string NameEn, string Definition,
+        decimal Baseline, decimal Target, decimal Actual, string Unit
+    );
+
+    [HttpGet("api/public/initiatives/{slug}/kpis")]
+    public async Task<IActionResult> GetKpisBySlug(string slug)
+    {
+        var initiative = await _repository.GetBySlugAsync(slug);
+        if (initiative is null) return NotFound();
+
+        var full = await _repository.GetWithDetailsAsync(initiative.Id);
+        var kpis = full!.Kpis.Select(k => new
+        {
+            k.NameAr, k.NameEn, k.Baseline, k.Target, k.Actual, k.Unit
+        });
+        return Ok(kpis);
+    }
+
+    [HttpPost("api/initiatives/{id}/kpis")]
+    [Authorize(Roles = "SuperAdmin,InitiativeManager")]
+    public async Task<IActionResult> AddKpi(Guid id, CreateKpiDto dto)
+    {
+        var initiative = await _repository.GetByIdAsync(id);
+        if (initiative is null) return NotFound();
+
+        var kpi = new InitiativeKpi
+        {
+            InitiativeId = id,
+            NameAr = dto.NameAr,
+            NameEn = dto.NameEn,
+            Definition = dto.Definition,
+            Baseline = dto.Baseline,
+            Target = dto.Target,
+            Actual = dto.Actual,
+            Unit = dto.Unit
+        };
+
+        // بما إن Repository الحالي خاص بـ Initiative بس، منستخدم DbContext هون مباشرة لبساطة الوقت
+        var context = HttpContext.RequestServices.GetRequiredService<Infrastructure.Persistence.QudraTechDbContext>();
+        context.InitiativeKpis.Add(kpi);
+        await context.SaveChangesAsync();
+
+        return Ok(new
+        {
+            kpi.Id, kpi.NameAr, kpi.NameEn, kpi.Baseline, kpi.Target, kpi.Actual, kpi.Unit
+        });
+    }
 }
