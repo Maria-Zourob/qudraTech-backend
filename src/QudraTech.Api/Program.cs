@@ -15,6 +15,7 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
 
 builder.Services.AddDbContext<QudraTechDbContext>(options =>
     options.UseSqlServer(
@@ -68,6 +69,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers();
 
 app.MapGet("/health", () => Results.Ok(new {status = "healthy"}));
 
