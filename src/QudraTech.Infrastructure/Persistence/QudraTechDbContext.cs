@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using QudraTech.Domain.Entities;
 
 namespace QudraTech.Infrastructure.Persistence;
 
-public class QudraTechDbContext : DbContext
+public class QudraTechDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     public QudraTechDbContext(DbContextOptions<QudraTechDbContext> options)
         : base(options)
@@ -25,9 +27,10 @@ public class QudraTechDbContext : DbContext
     public DbSet<TimelineEvent> TimelineEvents => Set<TimelineEvent>();
     public DbSet<SafeguardingReport> SafeguardingReports => Set<SafeguardingReport>();
     public DbSet<LessonLearned> LessonsLearned => Set<LessonLearned>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder); // مهم جدًا: لازم تنادى عشان جداول Identity تتبنى صح
 
         modelBuilder.Entity<InitiativeKpi>()
             .Property(k => k.Baseline)

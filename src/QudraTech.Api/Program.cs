@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using QudraTech.Infrastructure.Persistence;
 using Serilog;
+using Microsoft.AspNetCore.Identity;
+using QudraTech.Domain.Entities;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
@@ -10,6 +12,14 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<QudraTechDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+{
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.User.RequireUniqueEmail = true;
+})
+    .AddEntityFrameworkStores<QudraTechDbContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 Log.Information("QudraTech API is starting...");
