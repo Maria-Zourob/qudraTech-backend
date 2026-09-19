@@ -8,6 +8,7 @@ using QudraTech.Domain.Entities;
 using QudraTech.Infrastructure.Persistence;
 using QudraTech.Infrastructure.Services;
 using Serilog;
+using QudraTech.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +40,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-
+builder.Services.AddScoped<IInitiativeRepository, InitiativeRepository>();
 // تفعيل JWT Authentication
 var jwtSecret = builder.Configuration["Jwt:Secret"]
     ?? throw new InvalidOperationException("Jwt:Secret is not configured");
