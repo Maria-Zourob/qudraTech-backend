@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QudraTech.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using QudraTech.Infrastructure.Persistence;
 namespace QudraTech.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(QudraTechDbContext))]
-    partial class QudraTechDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260919100157_AddRefreshTokens")]
+    partial class AddRefreshTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
