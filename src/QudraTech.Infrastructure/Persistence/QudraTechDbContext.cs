@@ -18,7 +18,13 @@ public class QudraTechDbContext : DbContext
     public DbSet<InitiativeObjective> InitiativeObjectives => Set<InitiativeObjective>();
     public DbSet<KpiEvidence> KpiEvidences => Set<KpiEvidence>();
     public DbSet<KpiUpdate> KpiUpdates => Set<KpiUpdate>();
-
+    public DbSet<Document> Documents => Set<Document>();
+    public DbSet<DocumentVersion> DocumentVersions => Set<DocumentVersion>();
+    public DbSet<Media> Media => Set<Media>();
+    public DbSet<Report> Reports => Set<Report>();
+    public DbSet<TimelineEvent> TimelineEvents => Set<TimelineEvent>();
+    public DbSet<SafeguardingReport> SafeguardingReports => Set<SafeguardingReport>();
+    public DbSet<LessonLearned> LessonsLearned => Set<LessonLearned>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
