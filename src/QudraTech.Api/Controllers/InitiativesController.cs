@@ -68,4 +68,42 @@ public class InitiativesController : ControllerBase
 
         return CreatedAtAction(nameof(GetPublicBySlug), new {slug = initiative.Slug}, initiative);
     }
+        public record UpdateStatusDto(string Status);
+
+    [HttpPatch("api/initiatives/{id}/status")]
+    [Authorize(Roles = "SuperAdmin,InitiativeManager")]
+    public async Task<IActionResult> UpdateStatus(Guid id, UpdateStatusDto dto)
+    {
+        var initiative = await _repository.GetByIdAsync(id);
+        if (initiative is null) return NotFound();
+
+        if (!Enum.TryParse<InitiativeStatus>(dto.Status, out var newStatus))
+        {
+            return BadRequest(new {message = "Invalid status value"});
+        }
+
+        initiative.Status = newStatus;
+        initiative.UpdatedAt = DateTime.UtcNow;
+        _repository.Update(initiative);
+        await _repository.SaveChangesAsync();
+
+        return Ok(new {message = "Status updated", status = initiative.Status.ToString()});
+    }
+
+    // كمان نحتاج endpoint يرجع كل المبادرات (مش بس Active/Completed) للوحة التحكم
+    [HttpGet("api/initiatives")]
+    [Authorize(Roles = "SuperAdmin,InitiativeManager")]
+    public async Task<IActionResult> GetAllForAdmin()
+    {
+        var initiatives = await _repository.GetAllAsync();
+        var result = initiatives.Select(i => new
+        {
+            id = i.Id,
+            i.Slug,
+            i.TitleAr,
+            i.TitleEn,
+            Status = i.Status.ToString()
+        });
+        return Ok(result);
+    }
 }
