@@ -22,9 +22,9 @@ public class InitiativesController : ControllerBase
     public async Task<IActionResult> GetPublicList()
     {
         var initiatives = await _repository.GetPublicListAsync();
-        var result = initiatives.Select(i => new InitiativeListItemDto(
+                var result = initiatives.Select(i => new InitiativeListItemDto(
             i.Slug, i.TitleAr, i.TitleEn, i.DescriptionAr, i.DescriptionEn,
-            i.Status.ToString(), i.Location
+            i.Status.ToString(), i.Location, i.TargetGroupAr, i.TargetGroupEn
         ));
         return Ok(result);
     }
@@ -36,10 +36,11 @@ public class InitiativesController : ControllerBase
         var initiative = await _repository.GetBySlugAsync(slug);
         if (initiative is null) return NotFound();
 
-        var result = new InitiativeListItemDto(
+                var result = new InitiativeListItemDto(
             initiative.Slug, initiative.TitleAr, initiative.TitleEn,
             initiative.DescriptionAr, initiative.DescriptionEn,
-            initiative.Status.ToString(), initiative.Location
+            initiative.Status.ToString(), initiative.Location,
+            initiative.TargetGroupAr, initiative.TargetGroupEn
         );
         return Ok(result);
     }

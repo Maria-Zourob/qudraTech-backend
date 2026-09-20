@@ -7,7 +7,9 @@ public record InitiativeListItemDto(
     string DescriptionAr,
     string DescriptionEn,
     string Status,
-    string Location
+    string Location,
+    string TargetGroupAr,
+    string TargetGroupEn
 );
 
 public record CreateInitiativeDto(
