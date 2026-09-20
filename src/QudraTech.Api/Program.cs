@@ -67,6 +67,11 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<QudraTechDbContext>();
+    db.Database.Migrate();
+}
 Log.Information("QudraTech API is starting...");
 
 if (app.Environment.IsDevelopment())
