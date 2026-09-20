@@ -41,7 +41,7 @@ public class PublicController : ControllerBase
         });
     }
     
-    [HttpGet("api/admin/dashboard-summary")]
+    [HttpGet("~/api/admin/dashboard-summary")]
     [Authorize(Roles = "SuperAdmin,InitiativeManager")]
     public async Task<IActionResult> GetDashboardSummary()
     {
