@@ -33,6 +33,7 @@ public class QudraTechDbContext : IdentityDbContext<ApplicationUser, IdentityRol
     public DbSet<Volunteer> Volunteers => Set<Volunteer>();
     public DbSet<VolunteerAssignment> VolunteerAssignments => Set<VolunteerAssignment>();
     public DbSet<BudgetItem> BudgetItems => Set<BudgetItem>();
+    public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
     public DbSet<Risk> Risks => Set<Risk>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
