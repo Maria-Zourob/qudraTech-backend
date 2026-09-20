@@ -175,4 +175,26 @@ public class InitiativesController : ControllerBase
             kpi.Id, kpi.NameAr, kpi.NameEn, kpi.Baseline, kpi.Target, kpi.Actual, kpi.Unit
         });
     }
+        [HttpPut("api/initiatives/{id}")]
+    [Authorize(Roles = "SuperAdmin,InitiativeManager")]
+    public async Task<IActionResult> Update(Guid id, UpdateInitiativeDto dto)
+    {
+        var initiative = await _repository.GetByIdAsync(id);
+        if (initiative is null) return NotFound();
+
+        initiative.TitleAr = dto.TitleAr;
+        initiative.TitleEn = dto.TitleEn;
+        initiative.DescriptionAr = dto.DescriptionAr;
+        initiative.DescriptionEn = dto.DescriptionEn;
+        initiative.TargetGroupAr = dto.TargetGroupAr;
+        initiative.TargetGroupEn = dto.TargetGroupEn;
+        initiative.Location = dto.Location;
+        initiative.CategoryId = dto.CategoryId;
+        initiative.UpdatedAt = DateTime.UtcNow;
+
+        _repository.Update(initiative);
+        await _repository.SaveChangesAsync();
+
+        return Ok(new {message = "Initiative updated"});
+    }
 }

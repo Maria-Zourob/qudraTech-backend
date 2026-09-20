@@ -23,3 +23,10 @@ public record CreateInitiativeDto(
     string Location,
     Guid CategoryId
 );
+
+public record UpdateInitiativeDto(
+    string TitleAr, string TitleEn,
+    string DescriptionAr, string DescriptionEn,
+    string TargetGroupAr, string TargetGroupEn,
+    string Location, Guid CategoryId
+);
