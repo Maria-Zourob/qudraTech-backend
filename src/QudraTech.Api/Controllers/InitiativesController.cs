@@ -125,7 +125,27 @@ public class InitiativesController : ControllerBase
         });
         return Ok(kpis);
     }
+    [HttpGet("api/initiatives/{id}")]
+    [Authorize(Roles = "SuperAdmin,InitiativeManager")]
+    public async Task<IActionResult> GetByIdForAdmin(Guid id)
+    {
+        var initiative = await _repository.GetByIdAsync(id);
+        if (initiative is null) return NotFound();
 
+        return Ok(new
+        {
+            initiative.Id,
+            initiative.Slug,
+            initiative.TitleAr,
+            initiative.TitleEn,
+            initiative.DescriptionAr,
+            initiative.DescriptionEn,
+            Status = initiative.Status.ToString(),
+            initiative.Location,
+            initiative.TargetGroupAr,
+            initiative.TargetGroupEn
+        });
+    }
     [HttpPost("api/initiatives/{id}/kpis")]
     [Authorize(Roles = "SuperAdmin,InitiativeManager")]
     public async Task<IActionResult> AddKpi(Guid id, CreateKpiDto dto)
