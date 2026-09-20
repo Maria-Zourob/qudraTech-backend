@@ -32,10 +32,19 @@ public class QudraTechDbContext : IdentityDbContext<ApplicationUser, IdentityRol
     public DbSet<InitiativePartner> InitiativePartners => Set<InitiativePartner>();
     public DbSet<Volunteer> Volunteers => Set<Volunteer>();
     public DbSet<VolunteerAssignment> VolunteerAssignments => Set<VolunteerAssignment>();
+    public DbSet<BudgetItem> BudgetItems => Set<BudgetItem>();
+    public DbSet<Risk> Risks => Set<Risk>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder); // مهم جدًا: لازم تنادى عشان جداول Identity تتبنى صح
+        modelBuilder.Entity<BudgetItem>()
+            .Property(b => b.PlannedAmount)
+            .HasPrecision(18, 2);
 
+        modelBuilder.Entity<BudgetItem>()
+            .Property(b => b.ActualAmount)
+            .HasPrecision(18, 2);
         modelBuilder.Entity<InitiativeKpi>()
             .Property(k => k.Baseline)
             .HasPrecision(18, 2);
