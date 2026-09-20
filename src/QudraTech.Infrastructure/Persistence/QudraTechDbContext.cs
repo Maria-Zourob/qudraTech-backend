@@ -28,6 +28,10 @@ public class QudraTechDbContext : IdentityDbContext<ApplicationUser, IdentityRol
     public DbSet<SafeguardingReport> SafeguardingReports => Set<SafeguardingReport>();
     public DbSet<LessonLearned> LessonsLearned => Set<LessonLearned>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<Partner> Partners => Set<Partner>();
+    public DbSet<InitiativePartner> InitiativePartners => Set<InitiativePartner>();
+    public DbSet<Volunteer> Volunteers => Set<Volunteer>();
+    public DbSet<VolunteerAssignment> VolunteerAssignments => Set<VolunteerAssignment>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder); // مهم جدًا: لازم تنادى عشان جداول Identity تتبنى صح
