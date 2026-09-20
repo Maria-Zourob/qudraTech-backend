@@ -46,4 +46,39 @@ public class PartnersController : ControllerBase
 
         return Ok(new PartnerDto(partner.Id, partner.NameAr, partner.NameEn, partner.Type, partner.Website, partner.LogoUrl));
     }
+        // عام — شركاء مبادرة معيّنة بالتحديد
+    [HttpGet("api/public/initiatives/{slug}/partners")]
+    public async Task<IActionResult> GetByInitiative(string slug)
+    {
+        var initiative = await _context.Initiatives.FirstOrDefaultAsync(i => i.Slug == slug);
+        if (initiative is null) return NotFound();
+
+        var partners = await _context.InitiativePartners
+            .Where(ip => ip.InitiativeId == initiative.Id)
+            .Select(ip => new PartnerDto(
+                ip.Partner!.Id, ip.Partner.NameAr, ip.Partner.NameEn,
+                ip.Partner.Type, ip.Partner.Website, ip.Partner.LogoUrl
+            ))
+            .ToListAsync();
+        return Ok(partners);
+    }
+
+    // محمي — ربط شريك موجود بمبادرة
+    [HttpPost("api/initiatives/{initiativeId}/partners/{partnerId}")]
+    [Authorize(Roles = "SuperAdmin,InitiativeManager")]
+    public async Task<IActionResult> LinkToInitiative(Guid initiativeId, Guid partnerId)
+    {
+        var exists = await _context.InitiativePartners
+            .AnyAsync(ip => ip.InitiativeId == initiativeId && ip.PartnerId == partnerId);
+        if (exists) return Ok(new {message = "Already linked"});
+
+        _context.InitiativePartners.Add(new InitiativePartner
+        {
+            InitiativeId = initiativeId,
+            PartnerId = partnerId
+        });
+        await _context.SaveChangesAsync();
+
+        return Ok(new {message = "Partner linked to initiative"});
+    }
 }
