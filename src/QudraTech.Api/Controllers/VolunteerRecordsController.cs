@@ -63,7 +63,29 @@ public class VolunteerRecordsController : ControllerBase
             record.Phone, record.Email, record.Skills, record.Experience, record.JoinDate
         ));
     }
+    [HttpPut("api/volunteer-records/{id}")]
+    public async Task<IActionResult> Update(Guid id, CreateVolunteerRecordDto dto)
+    {
+        var record = await _context.VolunteerRecords.FindAsync(id);
+        if (record is null) return NotFound();
 
+        record.FullName = dto.FullName;
+        record.Team = dto.Team;
+        record.RoleInTeam = dto.RoleInTeam;
+        record.Phone = dto.Phone;
+        record.Email = dto.Email;
+        record.Skills = dto.Skills;
+        record.Experience = dto.Experience;
+        record.JoinDate = dto.JoinDate;
+        record.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new VolunteerRecordDto(
+            record.Id, record.FullName, record.Team, record.RoleInTeam,
+            record.Phone, record.Email, record.Skills, record.Experience, record.JoinDate
+        ));
+    }
     [HttpDelete("api/volunteer-records/{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
