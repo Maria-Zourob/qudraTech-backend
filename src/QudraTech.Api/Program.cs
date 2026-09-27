@@ -70,12 +70,12 @@ app.MapGet("/db-test", async (QudraTechDbContext db) =>
 {
     try
     {
-        var canConnect = await db.Database.CanConnectAsync();
+        await db.Database.OpenConnectionAsync();
 
         return Results.Ok(new
         {
             database = "QudraTechDb",
-            canConnect
+            connected = true
         });
     }
     catch (Exception ex)
@@ -84,6 +84,10 @@ app.MapGet("/db-test", async (QudraTechDbContext db) =>
             title: "Database connection failed",
             detail: ex.ToString()
         );
+    }
+    finally
+    {
+        await db.Database.CloseConnectionAsync();
     }
 });
 // using (var scope = app.Services.CreateScope())
