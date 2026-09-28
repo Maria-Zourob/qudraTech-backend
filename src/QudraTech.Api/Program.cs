@@ -26,8 +26,17 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("DefaultConnection is not configured");
+
+var connectionStringBuilder = new Npgsql.NpgsqlConnectionStringBuilder(baseConnectionString)
+{
+    SslMode = Npgsql.SslMode.Require,
+    TrustServerCertificate = true
+};
+
 builder.Services.AddDbContext<QudraTechDbContext>(options =>
-   options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+   options.UseNpgsql(connectionStringBuilder.ConnectionString));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 {
@@ -90,11 +99,11 @@ app.MapGet("/db-test", async (QudraTechDbContext db) =>
         await db.Database.CloseConnectionAsync();
     }
 });
-// using (var scope = app.Services.CreateScope())
-// {
-//     var db = scope.ServiceProvider.GetRequiredService<QudraTechDbContext>();
-//     db.Database.Migrate();
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<QudraTechDbContext>();
+    db.Database.Migrate();
+}
 Log.Information("QudraTech API is starting...");
 
 if (app.Environment.IsDevelopment())
