@@ -21,7 +21,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins(
+                "http://localhost:3000",
+                "https://qudratech-frontend-web-ea87ab84.hosted.cumin.dev"
+              )
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -39,8 +42,8 @@ if (!builder.Environment.IsDevelopment())
 builder.Services.AddDbContext<QudraTechDbContext>(options =>
    options.UseNpgsql(connectionStringBuilder.ConnectionString));
 
-builder.Services.AddDbContext<QudraTechDbContext>(options =>
-   options.UseNpgsql(connectionStringBuilder.ConnectionString));
+// builder.Services.AddDbContext<QudraTechDbContext>(options =>
+//    options.UseNpgsql(connectionStringBuilder.ConnectionString));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 {
