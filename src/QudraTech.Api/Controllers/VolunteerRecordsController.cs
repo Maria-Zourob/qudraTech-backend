@@ -43,7 +43,7 @@ public class VolunteerRecordsController : ControllerBase
     [HttpPost("api/volunteer-records")]
     public async Task<IActionResult> Create(CreateVolunteerRecordDto dto)
     {
-        var record = new VolunteerRecord
+               var record = new VolunteerRecord
         {
             FullName = dto.FullName,
             Team = dto.Team,
@@ -52,7 +52,7 @@ public class VolunteerRecordsController : ControllerBase
             Email = dto.Email,
             Skills = dto.Skills,
             Experience = dto.Experience,
-            JoinDate = dto.JoinDate
+            JoinDate = DateTime.SpecifyKind(dto.JoinDate, DateTimeKind.Utc)
         };
 
         _context.VolunteerRecords.Add(record);
@@ -76,7 +76,7 @@ public class VolunteerRecordsController : ControllerBase
         record.Email = dto.Email;
         record.Skills = dto.Skills;
         record.Experience = dto.Experience;
-        record.JoinDate = dto.JoinDate;
+        record.JoinDate = DateTime.SpecifyKind(dto.JoinDate, DateTimeKind.Utc);
         record.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();

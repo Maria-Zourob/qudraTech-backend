@@ -76,7 +76,7 @@ public class VolunteerRecordsImportController : ControllerBase
                     ? joinDateCell.GetDateTime()
                     : DateTime.Parse(joinDateCell.GetString());
 
-                var record = new VolunteerRecord
+                                var record = new VolunteerRecord
                 {
                     FullName = fullName,
                     Team = sheet.Cell(row, 2).GetString().Trim(),
@@ -85,7 +85,7 @@ public class VolunteerRecordsImportController : ControllerBase
                     Email = sheet.Cell(row, 5).GetString().Trim(),
                     Skills = sheet.Cell(row, 6).GetString().Trim(),
                     Experience = sheet.Cell(row, 7).GetString().Trim(),
-                    JoinDate = joinDate
+                    JoinDate = DateTime.SpecifyKind(joinDate, DateTimeKind.Utc)
                 };
 
                 _context.VolunteerRecords.Add(record);
