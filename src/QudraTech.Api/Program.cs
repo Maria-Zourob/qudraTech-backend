@@ -29,11 +29,15 @@ builder.Services.AddCors(options =>
 var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("DefaultConnection is not configured");
 
-var connectionStringBuilder = new Npgsql.NpgsqlConnectionStringBuilder(baseConnectionString)
+var connectionStringBuilder = new Npgsql.NpgsqlConnectionStringBuilder(baseConnectionString);
+
+if (!builder.Environment.IsDevelopment())
 {
-    SslMode = Npgsql.SslMode.Require,
-    TrustServerCertificate = true
-};
+    connectionStringBuilder.SslMode = Npgsql.SslMode.Require;
+}
+
+builder.Services.AddDbContext<QudraTechDbContext>(options =>
+   options.UseNpgsql(connectionStringBuilder.ConnectionString));
 
 builder.Services.AddDbContext<QudraTechDbContext>(options =>
    options.UseNpgsql(connectionStringBuilder.ConnectionString));

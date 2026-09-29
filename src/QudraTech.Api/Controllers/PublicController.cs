@@ -74,4 +74,50 @@ public class PublicController : ControllerBase
             byStatus
         });
     }
+    [HttpGet("~/api/admin/recent-activity")]
+    [Authorize(Roles = "SuperAdmin,InitiativeManager")]
+    public async Task<IActionResult> GetRecentActivity()
+    {
+        var recentInitiatives = await _context.Initiatives
+            .OrderByDescending(i => i.CreatedAt)
+            .Take(3)
+            .Select(i => new
+            {
+                type = "initiative",
+                text = "مبادرة جديدة: " + i.TitleAr,
+                date = i.CreatedAt
+            })
+            .ToListAsync();
+
+        var recentVolunteers = await _context.VolunteerRecords
+            .OrderByDescending(v => v.CreatedAt)
+            .Take(3)
+            .Select(v => new
+            {
+                type = "volunteer",
+                text = "متطوّع جديد: " + v.FullName,
+                date = v.CreatedAt
+            })
+            .ToListAsync();
+
+        var recentMessages = await _context.ContactMessages
+            .OrderByDescending(m => m.CreatedAt)
+            .Take(3)
+            .Select(m => new
+            {
+                type = "message",
+                text = "رسالة تواصل من: " + m.Name,
+                date = m.CreatedAt
+            })
+            .ToListAsync();
+
+        var combined = recentInitiatives
+            .Concat(recentVolunteers)
+            .Concat(recentMessages)
+            .OrderByDescending(x => x.date)
+            .Take(6)
+            .ToList();
+
+        return Ok(combined);
+    }
 }
