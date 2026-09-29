@@ -56,11 +56,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ env.OWNER_LC }}/qudratech-backend:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/qudratech-backend:latest
+            ghcr.io/${{ env.OWNER_LC }}/qudratech-backend:v1.1
+            ${{ secrets.DOCKERHUB_USERNAME }}/qudratech-backend:v1.1
