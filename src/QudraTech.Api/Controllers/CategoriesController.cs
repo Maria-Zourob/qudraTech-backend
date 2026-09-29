@@ -38,4 +38,16 @@ public class CategoriesController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(new CategoryDto(category.Id, category.NameAr, category.NameEn));
     }
+    
+    [HttpDelete("api/categories/{id}")]
+    [Authorize(Roles = "SuperAdmin,InitiativeManager")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var category = await _context.InitiativeCategories.FindAsync(id);
+        if (category is null) return NotFound();
+
+        _context.InitiativeCategories.Remove(category);
+        await _context.SaveChangesAsync();
+        return Ok(new {message = "Deleted"});
+    }
 }

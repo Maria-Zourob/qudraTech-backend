@@ -81,4 +81,15 @@ public class PartnersController : ControllerBase
 
         return Ok(new {message = "Partner linked to initiative"});
     }
+        [HttpDelete("api/partners/{id}")]
+    [Authorize(Roles = "SuperAdmin,InitiativeManager")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var partner = await _context.Partners.FindAsync(id);
+        if (partner is null) return NotFound();
+
+        _context.Partners.Remove(partner);
+        await _context.SaveChangesAsync();
+        return Ok(new {message = "Deleted"});
+    }
 }
