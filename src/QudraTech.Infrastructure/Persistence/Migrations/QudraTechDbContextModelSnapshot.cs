@@ -578,6 +578,54 @@ namespace QudraTech.Infrastructure.Persistence.Migrations
                     b.ToTable("InitiativeCategories");
                 });
 
+            modelBuilder.Entity("QudraTech.Domain.Entities.InitiativeImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CaptionAr")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CaptionEn")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("InitiativeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsCover")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InitiativeId");
+
+                    b.ToTable("InitiativeImages");
+                });
+
             modelBuilder.Entity("QudraTech.Domain.Entities.InitiativeKpi", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1273,6 +1321,17 @@ namespace QudraTech.Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("QudraTech.Domain.Entities.Initiative", "Initiative")
                         .WithMany("Beneficiaries")
+                        .HasForeignKey("InitiativeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Initiative");
+                });
+
+            modelBuilder.Entity("QudraTech.Domain.Entities.InitiativeImage", b =>
+                {
+                    b.HasOne("QudraTech.Domain.Entities.Initiative", "Initiative")
+                        .WithMany()
                         .HasForeignKey("InitiativeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

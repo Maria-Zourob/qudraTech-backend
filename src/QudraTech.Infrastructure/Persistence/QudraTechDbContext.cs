@@ -37,6 +37,7 @@ public class QudraTechDbContext : IdentityDbContext<ApplicationUser, IdentityRol
     public DbSet<VolunteerRecord> VolunteerRecords => Set<VolunteerRecord>();
     public DbSet<Risk> Risks => Set<Risk>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<InitiativeImage> InitiativeImages => Set<InitiativeImage>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder); // مهم جدًا: لازم تنادى عشان جداول Identity تتبنى صح
