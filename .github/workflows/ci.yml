@@ -57,11 +57,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+           - name: Set image tag
+        run: |
+          echo "IMAGE_TAG=v1.${{ github.run_number }}" >> $GITHUB_ENV
+          echo "Image tag: v1.${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ env.OWNER_LC }}/qudratech-backend:v1.2
-            ${{ secrets.DOCKERHUB_USERNAME }}/qudratech-backend:v1.2
+            ghcr.io/${{ env.OWNER_LC }}/qudratech-backend:${{ env.IMAGE_TAG }}
+            ghcr.io/${{ env.OWNER_LC }}/qudratech-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/qudratech-backend:${{ env.IMAGE_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/qudratech-backend:latest
