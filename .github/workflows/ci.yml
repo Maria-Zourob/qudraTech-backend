@@ -57,7 +57,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-            - name: Set image tag
+      - name: Set image tag
         run: |
           echo "IMAGE_TAG=v1.${{ github.run_number }}" >> $GITHUB_ENV
           echo "Image tag: v1.${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
